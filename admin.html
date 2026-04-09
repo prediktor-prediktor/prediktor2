@@ -1,6 +1,6 @@
 <!DOCTYPE html>
-<html lang="hr">
-<head>
+<html lang="hr"><head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Prediktor Admin</title>
@@ -160,13 +160,13 @@ tr:hover td { background: var(--surface2); }
   <div class="login-box">
     <div class="admin-logo">
       <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
-        <path d="M14 3L25 9V19L14 25L3 19V9L14 3Z" stroke="#c7f230" stroke-width="1.5" stroke-linejoin="round"/>
-        <path d="M14 3V25M3 9L25 19M25 9L3 19" stroke="#c7f230" stroke-width="1" opacity="0.4"/>
+        <path d="M14 3L25 9V19L14 25L3 19V9L14 3Z" stroke="#c7f230" stroke-width="1.5" stroke-linejoin="round"></path>
+        <path d="M14 3V25M3 9L25 19M25 9L3 19" stroke="#c7f230" stroke-width="1" opacity="0.4"></path>
       </svg>
     </div>
     <h1>Admin Panel</h1>
     <p>Unesite administratorski PIN za pristup</p>
-    <input class="pin-input" id="pin-input" type="password" maxlength="8" placeholder="••••••" autocomplete="off"/>
+    <input class="pin-input" id="pin-input" type="password" maxlength="8" placeholder="••••••" autocomplete="off">
     <button class="btn btn-accent" onclick="checkPin()">Prijava →</button>
   </div>
 </div>
@@ -177,7 +177,7 @@ tr:hover td { background: var(--surface2); }
     <div class="sidebar-logo">
       <div class="sidebar-logo-icon">
         <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
-          <path d="M9 2L16 6V12L9 16L2 12V6L9 2Z" stroke="#c7f230" stroke-width="1.5" stroke-linejoin="round"/>
+          <path d="M9 2L16 6V12L9 16L2 12V6L9 2Z" stroke="#c7f230" stroke-width="1.5" stroke-linejoin="round"></path>
         </svg>
       </div>
       <div>
@@ -188,34 +188,34 @@ tr:hover td { background: var(--surface2); }
     <nav class="sidebar-nav">
       <div class="nav-group-label">Pregled</div>
       <div class="nav-link active" onclick="showPage('dashboard')">
-        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="1" y="1" width="6" height="6" rx="1.5" stroke="currentColor" stroke-width="1.5"/><rect x="9" y="1" width="6" height="6" rx="1.5" stroke="currentColor" stroke-width="1.5"/><rect x="1" y="9" width="6" height="6" rx="1.5" stroke="currentColor" stroke-width="1.5"/><rect x="9" y="9" width="6" height="6" rx="1.5" stroke="currentColor" stroke-width="1.5"/></svg>
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="1" y="1" width="6" height="6" rx="1.5" stroke="currentColor" stroke-width="1.5"></rect><rect x="9" y="1" width="6" height="6" rx="1.5" stroke="currentColor" stroke-width="1.5"></rect><rect x="1" y="9" width="6" height="6" rx="1.5" stroke="currentColor" stroke-width="1.5"></rect><rect x="9" y="9" width="6" height="6" rx="1.5" stroke="currentColor" stroke-width="1.5"></rect></svg>
         Nadzorna ploča
       </div>
       <div class="nav-group-label">Turniri</div>
       <div class="nav-link" onclick="showPage('tournaments')">
-        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 1.5L10 6H14.5L11 8.5L12.5 13L8 10L3.5 13L5 8.5L1.5 6H6L8 1.5Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 1.5L10 6H14.5L11 8.5L12.5 13L8 10L3.5 13L5 8.5L1.5 6H6L8 1.5Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"></path></svg>
         Turniri
       </div>
       <div class="nav-link" onclick="showPage('results')">
-        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M2 8h12M2 4h8M2 12h5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M2 8h12M2 4h8M2 12h5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"></path></svg>
         Unos rezultata
       </div>
       <div class="nav-group-label">Korisnici</div>
       <div class="nav-link" onclick="showPage('users')">
-        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="5" r="3" stroke="currentColor" stroke-width="1.5"/><path d="M2 14c0-3 2.7-4.5 6-4.5s6 1.5 6 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="5" r="3" stroke="currentColor" stroke-width="1.5"></circle><path d="M2 14c0-3 2.7-4.5 6-4.5s6 1.5 6 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"></path></svg>
         Korisnici
       </div>
       <div class="nav-group-label">Konfiguracija</div>
       <div class="nav-link" onclick="showPage('appearance')">
-        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="3" stroke="currentColor" stroke-width="1.5"/><path d="M8 1v2M8 13v2M1 8h2M13 8h2M3.05 3.05l1.41 1.41M11.54 11.54l1.41 1.41M3.05 12.95l1.41-1.41M11.54 4.46l1.41-1.41" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="3" stroke="currentColor" stroke-width="1.5"></circle><path d="M8 1v2M8 13v2M1 8h2M13 8h2M3.05 3.05l1.41 1.41M11.54 11.54l1.41 1.41M3.05 12.95l1.41-1.41M11.54 4.46l1.41-1.41" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"></path></svg>
         Izgled i teme
       </div>
       <div class="nav-link" onclick="showPage('language')">
-        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="6.5" stroke="currentColor" stroke-width="1.5"/><path d="M8 1.5C8 1.5 5.5 4 5.5 8s2.5 6.5 2.5 6.5M8 1.5C8 1.5 10.5 4 10.5 8S8 14.5 8 14.5M1.5 8h13" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="6.5" stroke="currentColor" stroke-width="1.5"></circle><path d="M8 1.5C8 1.5 5.5 4 5.5 8s2.5 6.5 2.5 6.5M8 1.5C8 1.5 10.5 4 10.5 8S8 14.5 8 14.5M1.5 8h13" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"></path></svg>
         Jezik i tekst
       </div>
       <div class="nav-link" onclick="showPage('settings')">
-        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 10a2 2 0 100-4 2 2 0 000 4z" stroke="currentColor" stroke-width="1.5"/><path d="M13.5 8c0-.4 0-.8-.1-1.2l1.5-1.2-1.5-2.6-1.8.7A5.9 5.9 0 008.8 3l-.3-1.9h-3L5.2 3a5.9 5.9 0 00-2.8 1.7L.6 4l-1.5 2.6 1.5 1.2C.5 8.2.5 8.6.5 9l-1.5 1.2 1.5 2.6 1.8-.7a5.9 5.9 0 002.8 1.7l.3 1.9h3l.3-1.9a5.9 5.9 0 002.8-1.7l1.8.7 1.5-2.6L13.5 9c.1-.3.1-.7 0-1z" stroke="currentColor" stroke-width="1.5"/></svg>
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 10a2 2 0 100-4 2 2 0 000 4z" stroke="currentColor" stroke-width="1.5"></path><path d="M13.5 8c0-.4 0-.8-.1-1.2l1.5-1.2-1.5-2.6-1.8.7A5.9 5.9 0 008.8 3l-.3-1.9h-3L5.2 3a5.9 5.9 0 00-2.8 1.7L.6 4l-1.5 2.6 1.5 1.2C.5 8.2.5 8.6.5 9l-1.5 1.2 1.5 2.6 1.8-.7a5.9 5.9 0 002.8 1.7l.3 1.9h3l.3-1.9a5.9 5.9 0 002.8-1.7l1.8.7 1.5-2.6L13.5 9c.1-.3.1-.7 0-1z" stroke="currentColor" stroke-width="1.5"></path></svg>
         Opće postavke
       </div>
     </nav>
@@ -332,7 +332,7 @@ tr:hover td { background: var(--surface2); }
           <div class="field">
             <label>Turnir</label>
             <select id="results-tournament-select" onchange="loadResultsForm()">
-              <option value="">— odaberi turnir —</option>
+              <option value="" selected="selected">— odaberi turnir —</option>
             </select>
           </div>
         </div>
@@ -362,7 +362,7 @@ tr:hover td { background: var(--surface2); }
               <div class="toggle-label">Tamna tema (zadano)</div>
               <div class="toggle-desc">Aplikacija koristi tamnu temu po defaultu</div>
             </div>
-            <label class="toggle"><input type="checkbox" id="toggle-dark" checked onchange="saveAppearance()"><span class="toggle-slider"></span></label>
+            <label class="toggle"><input type="checkbox" id="toggle-dark" checked="checked" onchange="saveAppearance()"><span class="toggle-slider"></span></label>
           </div>
           <div class="toggle-row">
             <div class="toggle-info">
@@ -390,8 +390,8 @@ tr:hover td { background: var(--surface2); }
           <div class="field">
             <label>Prilagođena boja</label>
             <div style="display:flex;gap:10px;align-items:center">
-              <input type="color" id="custom-accent" value="#c7f230" style="width:56px;flex-shrink:0" onchange="selectCustomAccent(this.value)"/>
-              <input type="text" id="custom-accent-hex" value="#c7f230" placeholder="#c7f230" style="flex:1" oninput="selectCustomAccent(this.value)"/>
+              <input type="color" id="custom-accent" value="#c7f230" style="width:56px;flex-shrink:0" onchange="selectCustomAccent(this.value)">
+              <input type="text" id="custom-accent-hex" value="#c7f230" placeholder="#c7f230" style="flex:1" oninput="selectCustomAccent(this.value)">
             </div>
           </div>
           <div style="margin-top:16px">
@@ -404,7 +404,7 @@ tr:hover td { background: var(--surface2); }
         <div class="card-body">
           <div class="field">
             <label>Tekst poruke</label>
-            <input type="text" id="banner-text" placeholder="npr. Grupna faza završena 🎉"/>
+            <input type="text" id="banner-text" placeholder="npr. Grupna faza završena 🎉">
             <span class="field-hint">Ostavite prazno za skrivanje bannera</span>
           </div>
           <div style="margin-top:12px">
@@ -423,7 +423,7 @@ tr:hover td { background: var(--surface2); }
           <div class="field">
             <label>Jezik sučelja</label>
             <select id="app-language" onchange="saveLanguage()">
-              <option value="hr">Hrvatski</option>
+              <option value="hr" selected="selected">Hrvatski</option>
               <option value="en">English</option>
               <option value="de">Deutsch</option>
               <option value="it">Italiano</option>
@@ -437,7 +437,7 @@ tr:hover td { background: var(--surface2); }
               <div class="toggle-label">Dozvoli korisnicima promjenu jezika</div>
               <div class="toggle-desc">Korisnici mogu odabrati jezik u svom profilu</div>
             </div>
-            <label class="toggle"><input type="checkbox" id="toggle-user-lang" checked onchange="saveLanguage()"><span class="toggle-slider"></span></label>
+            <label class="toggle"><input type="checkbox" id="toggle-user-lang" checked="checked" onchange="saveLanguage()"><span class="toggle-slider"></span></label>
           </div>
         </div>
       </div>
@@ -445,9 +445,9 @@ tr:hover td { background: var(--surface2); }
         <div class="card-head"><div><h2>Prilagođeni tekstovi</h2><p>Izmijenite ključne poruke u aplikaciji</p></div></div>
         <div class="card-body">
           <div class="form-grid cols-1" style="gap:14px">
-            <div class="field"><label>Naziv aplikacije</label><input type="text" id="txt-app-name" value="Prediktor"/></div>
-            <div class="field"><label>Podnaslov (login ekran)</label><input type="text" id="txt-tagline" value="Predvidi. Natjecaj se. Pobijedi."/></div>
-            <div class="field"><label>Opis (login ekran)</label><input type="text" id="txt-description" value="Turnirski prediktor za prave navijače."/></div>
+            <div class="field"><label>Naziv aplikacije</label><input type="text" id="txt-app-name" value="Prediktor"></div>
+            <div class="field"><label>Podnaslov (login ekran)</label><input type="text" id="txt-tagline" value="Predvidi. Natjecaj se. Pobijedi."></div>
+            <div class="field"><label>Opis (login ekran)</label><input type="text" id="txt-description" value="Turnirski prediktor za prave navijače."></div>
           </div>
           <div style="margin-top:16px">
             <button class="btn btn-accent btn-sm" onclick="saveTexts()">Spremi tekstove</button>
@@ -463,8 +463,8 @@ tr:hover td { background: var(--surface2); }
         <div class="card-head"><div><h2>Administratorski PIN</h2><p>PIN za pristup ovoj admin ploči</p></div></div>
         <div class="card-body">
           <div class="form-grid">
-            <div class="field"><label>Novi PIN</label><input type="password" id="new-pin" placeholder="Min. 4 znaka" maxlength="8"/></div>
-            <div class="field"><label>Potvrdi PIN</label><input type="password" id="confirm-pin" placeholder="Ponovi PIN" maxlength="8"/></div>
+            <div class="field"><label>Novi PIN</label><input type="password" id="new-pin" placeholder="Min. 4 znaka" maxlength="8"></div>
+            <div class="field"><label>Potvrdi PIN</label><input type="password" id="confirm-pin" placeholder="Ponovi PIN" maxlength="8"></div>
           </div>
           <div style="margin-top:12px">
             <button class="btn btn-accent btn-sm" onclick="changePin()">Promijeni PIN</button>
@@ -503,19 +503,19 @@ tr:hover td { background: var(--surface2); }
       <button class="modal-close" onclick="closeModal('tournament-modal')">×</button>
     </div>
     <div class="modal-body">
-      <input type="hidden" id="tournament-id"/>
+      <input type="hidden" id="tournament-id">
       <div class="form-grid cols-1" style="gap:14px">
-        <div class="field"><label>Naziv turnira *</label><input type="text" id="t-name" placeholder="npr. SP 2026 – Prediktor"/></div>
-        <div class="field"><label>Kratki ID (slug) *</label><input type="text" id="t-slug" placeholder="npr. sp2026"/><span class="field-hint">Samo mala slova, brojevi i crtice.</span></div>
-        <div class="field"><label>Opis</label><input type="text" id="t-desc" placeholder="npr. Svjetsko Prvenstvo 2026 — SAD, Kanada, Meksiko"/></div>
+        <div class="field"><label>Naziv turnira *</label><input type="text" id="t-name" placeholder="npr. SP 2026 – Prediktor"></div>
+        <div class="field"><label>Kratki ID (slug) *</label><input type="text" id="t-slug" placeholder="npr. sp2026"><span class="field-hint">Samo mala slova, brojevi i crtice.</span></div>
+        <div class="field"><label>Opis</label><input type="text" id="t-desc" placeholder="npr. Svjetsko Prvenstvo 2026 — SAD, Kanada, Meksiko"></div>
         <div class="field"><label>Status</label>
           <select id="t-status">
-            <option value="upcoming">Nadolazeći</option>
+            <option value="upcoming" selected="selected">Nadolazeći</option>
             <option value="active">Aktivan</option>
             <option value="finished">Završen</option>
           </select>
         </div>
-        <div class="field"><label>Rok prijave</label><input type="datetime-local" id="t-deadline"/><span class="field-hint">Ostavite prazno za bez roka</span></div>
+        <div class="field"><label>Rok prijave</label><input type="datetime-local" id="t-deadline"><span class="field-hint">Ostavite prazno za bez roka</span></div>
       </div>
     </div>
     <div class="modal-foot">
@@ -533,12 +533,12 @@ tr:hover td { background: var(--surface2); }
       <button class="modal-close" onclick="closeModal('team-modal')">×</button>
     </div>
     <div class="modal-body">
-      <input type="hidden" id="team-id"/>
+      <input type="hidden" id="team-id">
       <div class="form-grid cols-1" style="gap:14px">
-        <div class="field"><label>Naziv tima *</label><input type="text" id="team-name" placeholder="npr. Hrvatska"/></div>
-        <div class="field"><label>Kratki naziv</label><input type="text" id="team-short" placeholder="npr. CRO" maxlength="5"/></div>
-        <div class="field"><label>Zastava (emoji)</label><input type="text" id="team-flag" placeholder="npr. 🇭🇷" maxlength="4"/></div>
-        <div class="field"><label>Zemlja / Liga</label><input type="text" id="team-country" placeholder="npr. Hrvatska"/></div>
+        <div class="field"><label>Naziv tima *</label><input type="text" id="team-name" placeholder="npr. Hrvatska"></div>
+        <div class="field"><label>Kratki naziv</label><input type="text" id="team-short" placeholder="npr. CRO" maxlength="5"></div>
+        <div class="field"><label>Zastava (emoji)</label><input type="text" id="team-flag" placeholder="npr. 🇭🇷" maxlength="4"></div>
+        <div class="field"><label>Zemlja / Liga</label><input type="text" id="team-country" placeholder="npr. Hrvatska"></div>
       </div>
       <div class="divider"></div>
       <div style="font-size:12px;color:var(--muted);margin-bottom:10px">Ili odaberite iz postojećih timova:</div>
@@ -559,20 +559,20 @@ tr:hover td { background: var(--surface2); }
       <button class="modal-close" onclick="closeModal('round-modal')">×</button>
     </div>
     <div class="modal-body">
-      <input type="hidden" id="round-id"/>
+      <input type="hidden" id="round-id">
       <div class="form-grid cols-1" style="gap:14px">
-        <div class="field"><label>Naziv runde *</label><input type="text" id="round-name" placeholder="npr. Grupna faza, Osmina finala..."/></div>
+        <div class="field"><label>Naziv runde *</label><input type="text" id="round-name" placeholder="npr. Grupna faza, Osmina finala..."></div>
         <div class="field"><label>Tip runde *</label>
           <select id="round-type" onchange="onRoundTypeChange()">
-            <option value="group">Grupna faza — timovi u grupama, N prolazi</option>
+            <option value="group" selected="selected">Grupna faza — timovi u grupama, N prolazi</option>
             <option value="knockout">Nokaut — 1 na 1, pobjednik prolazi</option>
             <option value="league">Liga — svi protiv svih, tablica</option>
           </select>
         </div>
         <div id="round-config-fields">
-          <div class="field"><label>Broj timova koji prolaze po grupi</label><input type="number" id="round-advance" value="2" min="1" max="10"/></div>
+          <div class="field"><label>Broj timova koji prolaze po grupi</label><input type="number" id="round-advance" value="2" min="1" max="10"></div>
         </div>
-        <div class="field"><label>Bodovi za točno predviđanje</label><input type="number" id="round-pts" value="1" min="0" max="50"/></div>
+        <div class="field"><label>Bodovi za točno predviđanje</label><input type="number" id="round-pts" value="1" min="0" max="50"></div>
       </div>
     </div>
     <div class="modal-foot">
@@ -584,7 +584,7 @@ tr:hover td { background: var(--surface2); }
 
 <div class="toast" id="toast"></div>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="admin_files/supabase-js@2"></script>
 <script>
 const SUPABASE_URL = 'https://bbibmedxvkzrbckqlqdd.supabase.co';
 const SUPABASE_KEY = 'sb_publishable_zvzgKTPdU98klL1nKjXHow_MtmI6hAv';
@@ -1231,5 +1231,6 @@ document.getElementById('t-slug')?.addEventListener('input', function() {
   this.dataset.manual = '1';
 });
 </script>
-</body>
-</html>
+
+
+</body></html>
