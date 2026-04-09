@@ -913,20 +913,16 @@ async function openAddTeamToGroup(groupId) {
   const { data: existing } = await sb.from('group_teams').select('team_id').eq('group_id', groupId);
   const existingIds = new Set((existing||[]).map(x=>x.team_id));
   const available = (allTeams||[]).filter(t => !existingIds.has(t.id));
-  if (!available.length) { showToast('Svi timovi su već dodani u ovu grupu.', 'error'); return; }
-  const opts = available.map(t => `${t.flag||'🏳️'} ${t.name}`).join('
-');
-  const name = prompt(`Unesite ime tima za dodavanje:
-
-Dostupni timovi:
-${opts}`);
+  if (!available.length) { showToast('Svi timovi su vec dodani u ovu grupu.', 'error'); return; }
+  const opts = available.map((t,i) => (i+1) + '. ' + (t.flag||'') + ' ' + t.name).join(', ');
+  const name = prompt('Dodaj tim u grupu. Dostupni timovi: ' + opts);
   if (!name) return;
   const team = available.find(t => t.name.toLowerCase() === name.trim().toLowerCase());
-  if (!team) { showToast('Tim nije pronađen. Provjerite naziv.', 'error'); return; }
+  if (!team) { showToast('Tim nije pronaden. Provjerite naziv.', 'error'); return; }
   const { data: existing2 } = await sb.from('group_teams').select('order_index').eq('group_id', groupId).order('order_index',{ascending:false}).limit(1);
   const nextIdx = (existing2?.[0]?.order_index ?? -1) + 1;
   await sb.from('group_teams').insert({ group_id: groupId, team_id: team.id, order_index: nextIdx });
-  showToast(`${team.flag||''} ${team.name} dodan!`, 'success');
+  showToast((team.flag||'') + ' ' + team.name + ' dodan!', 'success');
   loadGroupsEditor();
 }
 
