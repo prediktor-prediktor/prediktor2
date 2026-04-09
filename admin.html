@@ -247,7 +247,7 @@ tr:hover td { background: var(--surface2); }
       </div>
     </div>
 
-    <!-- TOURNAMENTS -->
+    <!-- TOURNAMENTS LIST -->
     <div class="page" id="page-tournaments">
       <div class="page-header" style="display:flex;align-items:flex-start;justify-content:space-between">
         <div><h1>Turniri</h1><p>Upravljanje turnirima i natjecanjima</p></div>
@@ -255,9 +255,68 @@ tr:hover td { background: var(--surface2); }
       </div>
       <div class="card">
         <div class="table-wrap"><table>
-          <thead><tr><th>Naziv</th><th>Status</th><th>Rok prijave</th><th>Predviđanja</th><th>Akcije</th></tr></thead>
+          <thead><tr><th>Naziv</th><th>Status</th><th>Runde</th><th>Rok prijave</th><th>Akcije</th></tr></thead>
           <tbody id="tournaments-table"><tr><td colspan="5" style="text-align:center;color:var(--muted);padding:24px">Učitavanje...</td></tr></tbody>
         </table></div>
+      </div>
+    </div>
+
+    <!-- TOURNAMENT BUILDER -->
+    <div class="page" id="page-builder">
+      <div class="page-header" style="display:flex;align-items:flex-start;justify-content:space-between;gap:12px">
+        <div>
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px">
+            <button class="btn btn-surface btn-sm" onclick="showPage('tournaments')" style="padding:5px 10px">← Natrag</button>
+          </div>
+          <h1 id="builder-title">Uredi turnir</h1>
+          <p id="builder-subtitle">Dodajte runde, timove i grupe</p>
+        </div>
+        <div style="display:flex;gap:8px;flex-shrink:0">
+          <button class="btn btn-surface btn-sm" onclick="editTournamentMeta()">✏ Uredi info</button>
+          <button class="btn btn-accent btn-sm" onclick="showPage('tournaments')">Gotovo</button>
+        </div>
+      </div>
+
+      <!-- TEAMS SECTION -->
+      <div class="card">
+        <div class="card-head" style="align-items:flex-start">
+          <div><h2>Timovi</h2><p>Svi timovi koji sudjeluju na turniru</p></div>
+          <button class="btn btn-accent btn-sm" onclick="openAddTeamModal()">+ Dodaj tim</button>
+        </div>
+        <div id="teams-list" style="padding:16px">
+          <div style="color:var(--muted);font-size:13px;text-align:center;padding:20px">Učitavanje...</div>
+        </div>
+      </div>
+
+      <!-- ROUNDS SECTION -->
+      <div class="card">
+        <div class="card-head" style="align-items:flex-start">
+          <div><h2>Runde</h2><p>Faze turnira — dodajte ih redom kojim se igraju</p></div>
+          <button class="btn btn-accent btn-sm" onclick="openAddRoundModal()">+ Dodaj rundu</button>
+        </div>
+        <div id="rounds-list" style="padding:16px">
+          <div style="color:var(--muted);font-size:13px;text-align:center;padding:20px">Učitavanje...</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ROUND DETAIL (groups editor) -->
+    <div class="page" id="page-round-detail">
+      <div class="page-header">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px">
+          <button class="btn btn-surface btn-sm" id="round-back-btn" style="padding:5px 10px">← Natrag</button>
+        </div>
+        <h1 id="round-detail-title">Uredi rundu</h1>
+        <p id="round-detail-sub">Upravljajte grupama i rasporedom timova</p>
+      </div>
+      <div class="card">
+        <div class="card-head" style="align-items:flex-start">
+          <div><h2>Grupe / razredi</h2><p>Dodajte grupe i rasporedite timove</p></div>
+          <button class="btn btn-accent btn-sm" onclick="addGroup()">+ Dodaj grupu</button>
+        </div>
+        <div id="groups-editor" style="padding:16px">
+          <div style="color:var(--muted);font-size:13px;text-align:center;padding:20px">Učitavanje...</div>
+        </div>
       </div>
     </div>
 
@@ -436,7 +495,7 @@ tr:hover td { background: var(--surface2); }
   </main>
 </div>
 
-<!-- TOURNAMENT MODAL -->
+<!-- TOURNAMENT META MODAL -->
 <div class="modal-overlay" id="tournament-modal">
   <div class="modal">
     <div class="modal-head">
@@ -447,7 +506,7 @@ tr:hover td { background: var(--surface2); }
       <input type="hidden" id="tournament-id"/>
       <div class="form-grid cols-1" style="gap:14px">
         <div class="field"><label>Naziv turnira *</label><input type="text" id="t-name" placeholder="npr. SP 2026 – Prediktor"/></div>
-        <div class="field"><label>Kratki ID (slug) *</label><input type="text" id="t-slug" placeholder="npr. sp2026"/><span class="field-hint">Samo mala slova, brojevi i crtice. Koristit će se u URL-u.</span></div>
+        <div class="field"><label>Kratki ID (slug) *</label><input type="text" id="t-slug" placeholder="npr. sp2026"/><span class="field-hint">Samo mala slova, brojevi i crtice.</span></div>
         <div class="field"><label>Opis</label><input type="text" id="t-desc" placeholder="npr. Svjetsko Prvenstvo 2026 — SAD, Kanada, Meksiko"/></div>
         <div class="field"><label>Status</label>
           <select id="t-status">
@@ -458,21 +517,67 @@ tr:hover td { background: var(--surface2); }
         </div>
         <div class="field"><label>Rok prijave</label><input type="datetime-local" id="t-deadline"/><span class="field-hint">Ostavite prazno za bez roka</span></div>
       </div>
-      <div class="divider"></div>
-      <div style="font-size:12px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:12px">Pravila bodovanja</div>
-      <div class="form-grid cols-3">
-        <div class="field"><label>Grupna faza</label><input type="number" id="sc-group" value="1" min="0" max="10"/></div>
-        <div class="field"><label>Osmina finala</label><input type="number" id="sc-r32" value="1" min="0" max="10"/></div>
-        <div class="field"><label>Šesnaestina</label><input type="number" id="sc-r16" value="2" min="0" max="10"/></div>
-        <div class="field"><label>Četvrtfinale</label><input type="number" id="sc-qf" value="3" min="0" max="10"/></div>
-        <div class="field"><label>Polufinale</label><input type="number" id="sc-sf" value="4" min="0" max="10"/></div>
-        <div class="field"><label>Finale</label><input type="number" id="sc-final" value="5" min="0" max="10"/></div>
-        <div class="field"><label>Bonus prvak</label><input type="number" id="sc-champ" value="10" min="0" max="50"/></div>
-      </div>
     </div>
     <div class="modal-foot">
       <button class="btn btn-surface btn-sm" onclick="closeModal('tournament-modal')">Odustani</button>
-      <button class="btn btn-accent btn-sm" onclick="saveTournament()">Spremi turnir</button>
+      <button class="btn btn-accent btn-sm" onclick="saveTournament()">Spremi i nastavi →</button>
+    </div>
+  </div>
+</div>
+
+<!-- ADD TEAM MODAL -->
+<div class="modal-overlay" id="team-modal">
+  <div class="modal">
+    <div class="modal-head">
+      <h2 id="team-modal-title">Dodaj tim</h2>
+      <button class="modal-close" onclick="closeModal('team-modal')">×</button>
+    </div>
+    <div class="modal-body">
+      <input type="hidden" id="team-id"/>
+      <div class="form-grid cols-1" style="gap:14px">
+        <div class="field"><label>Naziv tima *</label><input type="text" id="team-name" placeholder="npr. Hrvatska"/></div>
+        <div class="field"><label>Kratki naziv</label><input type="text" id="team-short" placeholder="npr. CRO" maxlength="5"/></div>
+        <div class="field"><label>Zastava (emoji)</label><input type="text" id="team-flag" placeholder="npr. 🇭🇷" maxlength="4"/></div>
+        <div class="field"><label>Zemlja / Liga</label><input type="text" id="team-country" placeholder="npr. Hrvatska"/></div>
+      </div>
+      <div class="divider"></div>
+      <div style="font-size:12px;color:var(--muted);margin-bottom:10px">Ili odaberite iz postojećih timova:</div>
+      <div id="existing-teams-list" style="max-height:200px;overflow-y:auto;display:flex;flex-wrap:wrap;gap:6px"></div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-surface btn-sm" onclick="closeModal('team-modal')">Odustani</button>
+      <button class="btn btn-accent btn-sm" onclick="saveTeam()">Dodaj tim</button>
+    </div>
+  </div>
+</div>
+
+<!-- ADD ROUND MODAL -->
+<div class="modal-overlay" id="round-modal">
+  <div class="modal">
+    <div class="modal-head">
+      <h2 id="round-modal-title">Dodaj rundu</h2>
+      <button class="modal-close" onclick="closeModal('round-modal')">×</button>
+    </div>
+    <div class="modal-body">
+      <input type="hidden" id="round-id"/>
+      <div class="form-grid cols-1" style="gap:14px">
+        <div class="field"><label>Naziv runde *</label><input type="text" id="round-name" placeholder="npr. Grupna faza, Osmina finala..."/></div>
+        <div class="field"><label>Tip runde *</label>
+          <select id="round-type" onchange="onRoundTypeChange()">
+            <option value="group">Grupna faza — timovi u grupama, N prolazi</option>
+            <option value="knockout">Nokaut — 1 na 1, pobjednik prolazi</option>
+            <option value="league">Liga — svi protiv svih, tablica</option>
+          </select>
+        </div>
+        <div id="round-config-fields">
+          <div class="field"><label>Broj timova koji prolaze po grupi</label><input type="number" id="round-advance" value="2" min="1" max="10"/></div>
+        </div>
+        <div class="field"><label>Bodovi za točno predviđanje</label><input type="number" id="round-pts" value="1" min="0" max="50"/></div>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-surface btn-sm" onclick="closeModal('round-modal')">Odustani</button>
+      <button class="btn btn-accent btn-sm" onclick="saveRound()">Dodaj rundu</button>
     </div>
   </div>
 </div>
@@ -523,9 +628,17 @@ function showPage(page) {
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
   document.querySelectorAll('.nav-link').forEach(n => n.classList.remove('active'));
   document.getElementById('page-' + page).classList.add('active');
-  document.querySelector(`.nav-link[onclick="showPage('${page}')"]`).classList.add('active');
+  const navLink = document.querySelector(`.nav-link[onclick="showPage('${page}')"]`);
+  if (navLink) navLink.classList.add('active');
+  else {
+    // Sub-pages highlight their parent
+    const parent = page === 'builder' || page === 'round-detail' ? 'tournaments' : null;
+    if (parent) document.querySelector(`.nav-link[onclick="showPage('${parent}')"]`)?.classList.add('active');
+  }
   if (page === 'dashboard') loadDashboard();
   else if (page === 'tournaments') loadTournaments();
+  else if (page === 'builder') { /* loaded by openBuilder */ }
+  else if (page === 'round-detail') { /* loaded by openRoundDetail */ }
   else if (page === 'results') loadResultsTournaments();
   else if (page === 'users') loadUsers();
   else if (page === 'appearance') loadAppearance();
@@ -564,32 +677,36 @@ async function loadDashboard() {
 }
 
 // ── TOURNAMENTS ──
+let currentTournamentId = null;
+let currentRoundId = null;
+let builderTeams = [];
+
 async function loadTournaments() {
   const { data: tours } = await sb.from('tournaments').select('*').order('created_at', { ascending: false });
+  const roundCounts = await Promise.all((tours||[]).map(t =>
+    sb.from('tournament_rounds').select('id',{count:'exact'}).eq('tournament_id', t.id)
+  ));
   const tbody = document.getElementById('tournaments-table');
   if (!tours?.length) {
     tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;color:var(--muted);padding:24px">Nema turnira. Kreirajte prvi!</td></tr>';
     return;
   }
-  const predCounts = await Promise.all(tours.map(t => sb.from('predictions').select('id', {count:'exact'}).eq('tournament_id', t.id)));
   tbody.innerHTML = tours.map((t, i) => {
     const statusBadge = t.status === 'active'
       ? `<span class="badge badge-green"><span class="live-dot"></span>Aktivan</span>`
-      : t.status === 'upcoming'
-      ? `<span class="badge badge-yellow">Uskoro</span>`
+      : t.status === 'upcoming' ? `<span class="badge badge-yellow">Uskoro</span>`
       : `<span class="badge badge-gray">Završen</span>`;
     const deadline = t.deadline ? new Date(t.deadline).toLocaleDateString('hr-HR',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'}) : '—';
     return `<tr>
       <td><div style="font-weight:500">${t.name}</div><div style="font-size:11px;color:var(--muted)">${t.slug}</div></td>
       <td>${statusBadge}</td>
+      <td>${roundCounts[i].count || 0} rund(e)</td>
       <td style="color:var(--muted)">${deadline}</td>
-      <td>${predCounts[i].count || 0}</td>
-      <td>
-        <div style="display:flex;gap:8px">
-          <button class="btn btn-surface btn-sm" onclick="editTournament('${t.id}')">Uredi</button>
-          <button class="btn btn-danger btn-sm" onclick="deleteTournament('${t.id}','${t.name}')">Briši</button>
-        </div>
-      </td>
+      <td><div style="display:flex;gap:8px">
+        <button class="btn btn-accent btn-sm" onclick="openBuilder('${t.id}')">⚙ Gradi</button>
+        <button class="btn btn-surface btn-sm" onclick="editTournamentMetaById('${t.id}')">Uredi</button>
+        <button class="btn btn-danger btn-sm" onclick="deleteTournament('${t.id}','${t.name.replace(/'/g,"\'")}')">Briši</button>
+      </div></td>
     </tr>`;
   }).join('');
 }
@@ -600,14 +717,11 @@ function openTournamentModal() {
   ['t-name','t-slug','t-desc'].forEach(id => document.getElementById(id).value = '');
   document.getElementById('t-status').value = 'upcoming';
   document.getElementById('t-deadline').value = '';
-  ['sc-group','sc-r32','sc-r16','sc-qf','sc-sf','sc-final'].forEach((id,i) => document.getElementById(id).value = [1,1,2,3,4,5][i]);
-  document.getElementById('sc-champ').value = 10;
   document.getElementById('tournament-modal').classList.add('open');
 }
 
-async function editTournament(id) {
+async function editTournamentMetaById(id) {
   const { data: t } = await sb.from('tournaments').select('*').eq('id', id).single();
-  const { data: s } = await sb.from('scoring_rules').select('*').eq('tournament_id', id).single();
   document.getElementById('tournament-id').value = id;
   document.getElementById('modal-title').textContent = 'Uredi turnir';
   document.getElementById('t-name').value = t.name;
@@ -615,52 +729,41 @@ async function editTournament(id) {
   document.getElementById('t-desc').value = t.description || '';
   document.getElementById('t-status').value = t.status;
   document.getElementById('t-deadline').value = t.deadline ? new Date(t.deadline).toISOString().slice(0,16) : '';
-  if (s) {
-    document.getElementById('sc-group').value = s.group_pts;
-    document.getElementById('sc-r32').value = s.r32_pts;
-    document.getElementById('sc-r16').value = s.r16_pts;
-    document.getElementById('sc-qf').value = s.qf_pts;
-    document.getElementById('sc-sf').value = s.sf_pts;
-    document.getElementById('sc-final').value = s.final_pts;
-    document.getElementById('sc-champ').value = s.champion_pts;
-  }
   document.getElementById('tournament-modal').classList.add('open');
+}
+
+function editTournamentMeta() {
+  editTournamentMetaById(currentTournamentId);
 }
 
 async function saveTournament() {
   const id = document.getElementById('tournament-id').value;
   const name = document.getElementById('t-name').value.trim();
   const slug = document.getElementById('t-slug').value.trim();
-  if (!name || !slug) { showToast('Naziv i slug su obavezni.', 'error'); return; }
+  if (!name || !slug) { showToast('Naziv i slug su obavezni.', 'error'); return;  }
   const payload = {
     name, slug,
     description: document.getElementById('t-desc').value.trim(),
     status: document.getElementById('t-status').value,
     deadline: document.getElementById('t-deadline').value || null
   };
-  const scoring = {
-    group_pts: +document.getElementById('sc-group').value,
-    r32_pts: +document.getElementById('sc-r32').value,
-    r16_pts: +document.getElementById('sc-r16').value,
-    qf_pts: +document.getElementById('sc-qf').value,
-    sf_pts: +document.getElementById('sc-sf').value,
-    final_pts: +document.getElementById('sc-final').value,
-    champion_pts: +document.getElementById('sc-champ').value
-  };
-  let tournamentId = id;
   if (id) {
     const { error } = await sb.from('tournaments').update(payload).eq('id', id);
-    if (error) { showToast('Greška pri ažuriranju.', 'error'); return; }
-    await sb.from('scoring_rules').upsert({ tournament_id: id, ...scoring });
+    if (error) { showToast('Greška: ' + error.message, 'error'); return; }
+    closeModal('tournament-modal');
+    showToast('Turnir ažuriran!', 'success');
+    if (currentTournamentId === id) {
+      document.getElementById('builder-title').textContent = name;
+      document.getElementById('builder-subtitle').textContent = payload.description || '';
+    }
+    loadTournaments();
   } else {
     const { data, error } = await sb.from('tournaments').insert(payload).select().single();
     if (error) { showToast('Greška: ' + error.message, 'error'); return; }
-    tournamentId = data.id;
-    await sb.from('scoring_rules').insert({ tournament_id: tournamentId, ...scoring });
+    closeModal('tournament-modal');
+    showToast('Turnir kreiran! Sada dodajte timove i runde.', 'success');
+    openBuilder(data.id);
   }
-  closeModal('tournament-modal');
-  showToast('Turnir spremljen!', 'success');
-  loadTournaments();
 }
 
 async function deleteTournament(id, name) {
@@ -669,6 +772,260 @@ async function deleteTournament(id, name) {
   if (error) { showToast('Greška pri brisanju.', 'error'); return; }
   showToast('Turnir obrisan.', 'success');
   loadTournaments();
+}
+
+// ── BUILDER ──
+async function openBuilder(tournamentId) {
+  currentTournamentId = tournamentId;
+  const { data: t } = await sb.from('tournaments').select('*').eq('id', tournamentId).single();
+  document.getElementById('builder-title').textContent = t.name;
+  document.getElementById('builder-subtitle').textContent = t.description || t.slug;
+  document.getElementById('round-back-btn').onclick = () => showPage('builder');
+  showPage('builder');
+  await Promise.all([loadBuilderTeams(), loadBuilderRounds()]);
+}
+
+async function loadBuilderTeams() {
+  const { data: gteams } = await sb
+    .from('group_teams')
+    .select('team_id, teams(*), round_groups(round_id, tournament_rounds(tournament_id))')
+    .eq('round_groups.tournament_rounds.tournament_id', currentTournamentId);
+
+  const seen = new Set();
+  builderTeams = [];
+  (gteams || []).forEach(gt => {
+    if (gt.teams && !seen.has(gt.team_id)) {
+      seen.add(gt.team_id);
+      builderTeams.push(gt.teams);
+    }
+  });
+
+  // Also get teams directly on the tournament (we'll use a simpler approach)
+  const { data: directTeams } = await sb.from('teams').select('*').order('name');
+  // Show teams that are used in this tournament's groups
+  const usedIds = new Set(builderTeams.map(t => t.id));
+
+  const el = document.getElementById('teams-list');
+  if (!builderTeams.length) {
+    el.innerHTML = `<div style="color:var(--muted);font-size:13px;text-align:center;padding:12px">Još nema timova. Dodajte timove, zatim ih rasporedite u grupe unutar rundi.</div>`;
+    return;
+  }
+  el.innerHTML = `<div style="display:flex;flex-wrap:wrap;gap:8px">${builderTeams.map(t => `
+    <div style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:6px 12px;display:flex;align-items:center;gap:6px;font-size:13px">
+      <span>${t.flag||'🏳️'}</span><span>${t.name}</span>
+      <span style="color:var(--muted);font-size:11px">${t.short_name||''}</span>
+    </div>`).join('')}</div>`;
+}
+
+async function loadBuilderRounds() {
+  const { data: rounds } = await sb.from('tournament_rounds')
+    .select('*')
+    .eq('tournament_id', currentTournamentId)
+    .order('order_index');
+
+  const el = document.getElementById('rounds-list');
+  if (!rounds?.length) {
+    el.innerHTML = `<div style="color:var(--muted);font-size:13px;text-align:center;padding:12px">Još nema rundi. Dodajte prvu rundu turnira.</div>`;
+    return;
+  }
+
+  const typeLabels = { group: 'Grupna faza', knockout: 'Nokaut', league: 'Liga' };
+  const typeColors = { group: 'badge-yellow', knockout: 'badge-green', league: 'badge-gray' };
+
+  el.innerHTML = rounds.map((r, i) => `
+    <div style="background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:14px;margin-bottom:10px;display:flex;align-items:center;gap:12px">
+      <div style="width:28px;height:28px;background:var(--border);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:var(--muted);flex-shrink:0">${i+1}</div>
+      <div style="flex:1;min-width:0">
+        <div style="font-size:14px;font-weight:600">${r.name}</div>
+        <div style="display:flex;align-items:center;gap:8px;margin-top:4px">
+          <span class="badge ${typeColors[r.type]||'badge-gray'}">${typeLabels[r.type]||r.type}</span>
+          ${r.config?.points ? `<span style="font-size:11px;color:var(--muted)">${r.config.points} bod(a)</span>` : ''}
+        </div>
+      </div>
+      <div style="display:flex;gap:6px">
+        ${r.type === 'group' || r.type === 'league' ? `<button class="btn btn-surface btn-sm" onclick="openRoundDetail('${r.id}','${r.name.replace(/'/g,"\'")}')">⚙ Grupe</button>` : ''}
+        <button class="btn btn-danger btn-sm" onclick="deleteRound('${r.id}')">✕</button>
+      </div>
+    </div>`).join('');
+}
+
+async function openRoundDetail(roundId, roundName) {
+  currentRoundId = roundId;
+  document.getElementById('round-detail-title').textContent = roundName;
+  document.getElementById('round-detail-sub').textContent = 'Upravljajte grupama i rasporedom timova';
+  showPage('round-detail');
+  loadGroupsEditor();
+}
+
+async function loadGroupsEditor() {
+  const el = document.getElementById('groups-editor');
+  const { data: groups } = await sb.from('round_groups')
+    .select('*, group_teams(*, teams(*))')
+    .eq('round_id', currentRoundId)
+    .order('order_index');
+
+  if (!groups?.length) {
+    el.innerHTML = `<div style="color:var(--muted);font-size:13px;text-align:center;padding:12px">Nema grupa. Kliknite "+ Dodaj grupu" za početak.</div>`;
+    return;
+  }
+
+  el.innerHTML = groups.map(g => {
+    const teamItems = (g.group_teams || []).map(gt => `
+      <div style="display:flex;align-items:center;gap:8px;padding:8px 0;border-bottom:1px solid var(--border)">
+        <span style="font-size:18px">${gt.teams?.flag||'🏳️'}</span>
+        <span style="font-size:13px;font-weight:500;flex:1">${gt.teams?.name||'?'}</span>
+        <button onclick="removeTeamFromGroup('${gt.id}')" style="background:none;border:none;color:var(--muted);cursor:pointer;font-size:16px;padding:0 4px">×</button>
+      </div>`).join('');
+    return `
+      <div style="background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:14px;margin-bottom:12px">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
+          <div style="font-size:14px;font-weight:700;color:var(--accent)">${g.name}</div>
+          <div style="display:flex;gap:6px">
+            <button class="btn btn-surface btn-sm" onclick="openAddTeamToGroup('${g.id}')">+ Tim</button>
+            <button class="btn btn-danger btn-sm" onclick="deleteGroup('${g.id}')">✕</button>
+          </div>
+        </div>
+        ${teamItems || '<div style="font-size:12px;color:var(--muted);padding:8px 0">Nema timova u ovoj grupi</div>'}
+      </div>`;
+  }).join('');
+}
+
+async function addGroup() {
+  const name = prompt('Naziv grupe (npr. Skupina A):');
+  if (!name) return;
+  const { data: existing } = await sb.from('round_groups').select('order_index').eq('round_id', currentRoundId).order('order_index', {ascending:false}).limit(1);
+  const nextIdx = (existing?.[0]?.order_index ?? -1) + 1;
+  const { error } = await sb.from('round_groups').insert({ round_id: currentRoundId, name: name.trim(), order_index: nextIdx });
+  if (error) { showToast('Greška: ' + error.message, 'error'); return; }
+  showToast('Grupa dodana!', 'success');
+  loadGroupsEditor();
+}
+
+async function deleteGroup(groupId) {
+  if (!confirm('Obrisati ovu grupu i sve njene timove?')) return;
+  await sb.from('round_groups').delete().eq('id', groupId);
+  showToast('Grupa obrisana.', 'success');
+  loadGroupsEditor();
+}
+
+async function openAddTeamToGroup(groupId) {
+  const { data: allTeams } = await sb.from('teams').select('*').order('name');
+  const { data: existing } = await sb.from('group_teams').select('team_id').eq('group_id', groupId);
+  const existingIds = new Set((existing||[]).map(x=>x.team_id));
+  const available = (allTeams||[]).filter(t => !existingIds.has(t.id));
+  if (!available.length) { showToast('Svi timovi su već dodani u ovu grupu.', 'error'); return; }
+  const opts = available.map(t => `${t.flag||'🏳️'} ${t.name}`).join('
+');
+  const name = prompt(`Unesite ime tima za dodavanje:
+
+Dostupni timovi:
+${opts}`);
+  if (!name) return;
+  const team = available.find(t => t.name.toLowerCase() === name.trim().toLowerCase());
+  if (!team) { showToast('Tim nije pronađen. Provjerite naziv.', 'error'); return; }
+  const { data: existing2 } = await sb.from('group_teams').select('order_index').eq('group_id', groupId).order('order_index',{ascending:false}).limit(1);
+  const nextIdx = (existing2?.[0]?.order_index ?? -1) + 1;
+  await sb.from('group_teams').insert({ group_id: groupId, team_id: team.id, order_index: nextIdx });
+  showToast(`${team.flag||''} ${team.name} dodan!`, 'success');
+  loadGroupsEditor();
+}
+
+async function removeTeamFromGroup(groupTeamId) {
+  await sb.from('group_teams').delete().eq('id', groupTeamId);
+  showToast('Tim uklonjen.', 'success');
+  loadGroupsEditor();
+}
+
+// ── TEAM MODAL ──
+async function openAddTeamModal() {
+  document.getElementById('team-id').value = '';
+  document.getElementById('team-modal-title').textContent = 'Dodaj novi tim';
+  ['team-name','team-short','team-flag','team-country'].forEach(id => document.getElementById(id).value = '');
+  // Load existing teams
+  const { data: teams } = await sb.from('teams').select('*').order('name');
+  const list = document.getElementById('existing-teams-list');
+  list.innerHTML = (teams||[]).map(t => `
+    <div onclick="addExistingTeamToTournament('${t.id}')" style="background:var(--surface2);border:1px solid var(--border);border-radius:6px;padding:5px 10px;cursor:pointer;font-size:12px;display:flex;align-items:center;gap:4px" title="Dodaj ${t.name}">
+      ${t.flag||'🏳️'} ${t.name}
+    </div>`).join('');
+  document.getElementById('team-modal').classList.add('open');
+}
+
+async function addExistingTeamToTournament(teamId) {
+  closeModal('team-modal');
+  showToast('Tim dodat u popis! Rasporedite ga u grupu unutar runde.', 'success');
+  // Teams are added to groups, not directly to tournaments
+  // Show confirmation and reload
+  await loadBuilderTeams();
+}
+
+async function saveTeam() {
+  const name = document.getElementById('team-name').value.trim();
+  if (!name) { showToast('Naziv tima je obavezan.', 'error'); return; }
+  const payload = {
+    name,
+    short_name: document.getElementById('team-short').value.trim() || null,
+    flag: document.getElementById('team-flag').value.trim() || null,
+    country: document.getElementById('team-country').value.trim() || null
+  };
+  const { error } = await sb.from('teams').insert(payload);
+  if (error) { showToast('Greška: ' + error.message, 'error'); return; }
+  closeModal('team-modal');
+  showToast(`${payload.flag||''} ${name} kreiran! Sada ga rasporedite u grupu.`, 'success');
+  loadBuilderTeams();
+}
+
+// ── ROUND MODAL ──
+function openAddRoundModal() {
+  document.getElementById('round-id').value = '';
+  document.getElementById('round-modal-title').textContent = 'Dodaj rundu';
+  document.getElementById('round-name').value = '';
+  document.getElementById('round-type').value = 'group';
+  document.getElementById('round-pts').value = '1';
+  onRoundTypeChange();
+  document.getElementById('round-modal').classList.add('open');
+}
+
+function onRoundTypeChange() {
+  const type = document.getElementById('round-type').value;
+  const cfg = document.getElementById('round-config-fields');
+  if (type === 'group') {
+    cfg.innerHTML = '<div class="field"><label>Broj timova koji prolaze po grupi</label><input type="number" id="round-advance" value="2" min="1" max="10"/></div>';
+  } else if (type === 'knockout') {
+    cfg.innerHTML = '<div class="field"><label>Broj utakmica</label><input type="number" id="round-matches" value="16" min="1" max="64"/></div>';
+  } else {
+    cfg.innerHTML = '<div class="field"><label>Broj timova koji prolaze</label><input type="number" id="round-advance" value="8" min="1" max="36"/></div>';
+  }
+}
+
+async function saveRound() {
+  const name = document.getElementById('round-name').value.trim();
+  const type = document.getElementById('round-type').value;
+  if (!name) { showToast('Naziv runde je obavezan.', 'error'); return; }
+  const pts = parseInt(document.getElementById('round-pts').value) || 1;
+  const config = { points: pts };
+  const advEl = document.getElementById('round-advance');
+  const matchEl = document.getElementById('round-matches');
+  if (advEl) config.advance = parseInt(advEl.value) || 2;
+  if (matchEl) config.matches = parseInt(matchEl.value) || 16;
+
+  const { data: existing } = await sb.from('tournament_rounds').select('order_index').eq('tournament_id', currentTournamentId).order('order_index',{ascending:false}).limit(1);
+  const nextIdx = (existing?.[0]?.order_index ?? -1) + 1;
+
+  const { error } = await sb.from('tournament_rounds').insert({
+    tournament_id: currentTournamentId, name, type, order_index: nextIdx, config
+  });
+  if (error) { showToast('Greška: ' + error.message, 'error'); return; }
+  closeModal('round-modal');
+  showToast('Runda dodana!', 'success');
+  loadBuilderRounds();
+}
+
+async function deleteRound(roundId) {
+  if (!confirm('Obrisati ovu rundu i sve njene grupe?')) return;
+  await sb.from('tournament_rounds').delete().eq('id', roundId);
+  showToast('Runda obrisana.', 'success');
+  loadBuilderRounds();
 }
 
 // ── RESULTS ──
