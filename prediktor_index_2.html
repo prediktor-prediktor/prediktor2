@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="hr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Prediktor</title>
+<style>
+:root {
+  --bg: #0d1017;
+  --surface: #111318;
+  --surface2: #1a1d26;
+  --border: #1e2130;
+  --accent: #c7f230;
+  --accent-dim: #1a2a10;
+  --text: #ffffff;
+  --muted: #6b7280;
+  --gold: #f5c842;
+  --silver: #a0aec0;
+  --bronze: #c07c3a;
+  --red: #ef4444;
+  --radius: 12px;
+  --nav-height: 64px;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+body { background: var(--bg); color: var(--text); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; min-height: 100vh; max-width: 480px; margin: 0 auto; overflow-x: hidden; }
+.screen { display: none; min-height: 100vh; flex-direction: column; }
+.screen.active { display: flex; }
+#screen-login { align-items: center; justify-content: center; padding: 40px 24px; }
+.login-logo { width: 72px; height: 72px; background: var(--accent-dim); border-radius: 20px; display: flex; align-items: center; justify-content: center; margin-bottom: 28px; }
+.login-title { font-size: 28px; font-weight: 700; letter-spacing: -0.5px; margin-bottom: 8px; text-align: center; }
+.login-sub { font-size: 14px; color: var(--muted); text-align: center; margin-bottom: 48px; line-height: 1.6; }
+.google-btn { display: flex; align-items: center; justify-content: center; gap: 12px; width: 100%; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px; color: var(--text); font-size: 15px; font-weight: 500; cursor: pointer; transition: background 0.15s; }
+.google-btn:hover { background: var(--surface2); }
+.google-btn:active { transform: scale(0.98); }
+.login-terms { font-size: 12px; color: var(--muted); text-align: center; margin-top: 24px; line-height: 1.6; }
+.topbar { background: var(--surface); border-bottom: 1px solid var(--border); padding: 0 16px; position: sticky; top: 0; z-index: 100; }
+.topbar-inner { display: flex; align-items: center; height: 52px; gap: 12px; }
+.topbar-title { font-size: 17px; font-weight: 600; flex: 1; }
+.topbar-avatar { width: 32px; height: 32px; border-radius: 50%; background: var(--accent-dim); display: flex; align-items: center; justify-content: center; color: var(--accent); font-size: 13px; font-weight: 600; cursor: pointer; overflow: hidden; flex-shrink: 0; }
+.topbar-avatar img { width: 100%; height: 100%; object-fit: cover; }
+.content { flex: 1; overflow-y: auto; padding: 12px 12px calc(var(--nav-height) + 12px); }
+.bottom-nav { position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 480px; background: var(--surface); border-top: 1px solid var(--border); display: flex; height: var(--nav-height); z-index: 100; }
+.nav-item { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; cursor: pointer; }
+.nav-item:active { opacity: 0.7; }
+.nav-icon { width: 22px; height: 22px; }
+.nav-label { font-size: 10px; color: var(--muted); font-weight: 500; }
+.nav-item.active .nav-label { color: var(--accent); }
+.card { background: var(--surface); border-radius: var(--radius); overflow: hidden; margin-bottom: 10px; }
+.card-header { padding: 14px 14px 10px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; }
+.card-title { font-size: 13px; font-weight: 600; }
+.card-sub { font-size: 11px; color: var(--muted); margin-top: 2px; }
+.tournament-hero { background: var(--surface); border-radius: var(--radius); padding: 16px; margin-bottom: 10px; display: flex; align-items: center; gap: 14px; cursor: pointer; }
+.tournament-emblem { width: 52px; height: 52px; background: var(--accent-dim); border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 26px; flex-shrink: 0; }
+.tournament-name { font-size: 15px; font-weight: 600; }
+.tournament-desc { font-size: 12px; color: var(--muted); margin-top: 3px; }
+.live-badge { display: inline-flex; align-items: center; gap: 5px; font-size: 10px; font-weight: 600; padding: 3px 9px; border-radius: 20px; margin-top: 6px; }
+.live-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--accent); animation: pulse 1.5s infinite; }
+@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
+.lb-row { display: flex; align-items: center; padding: 11px 14px; gap: 10px; border-bottom: 1px solid var(--border); }
+.lb-row:last-child { border-bottom: none; }
+.lb-rank { width: 22px; text-align: center; font-size: 13px; color: var(--muted); flex-shrink: 0; }
+.lb-rank.r1 { color: var(--gold); font-weight: 700; font-size: 15px; }
+.lb-rank.r2 { color: var(--silver); font-weight: 600; }
+.lb-rank.r3 { color: var(--bronze); font-weight: 600; }
+.lb-avatar { width: 34px; height: 34px; border-radius: 50%; background: var(--surface2); display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 600; color: var(--accent); flex-shrink: 0; overflow: hidden; }
+.lb-avatar img { width: 100%; height: 100%; object-fit: cover; }
+.lb-info { flex: 1; min-width: 0; }
+.lb-name { font-size: 13px; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.lb-pick { font-size: 11px; color: var(--muted); margin-top: 2px; }
+.lb-pts { text-align: right; flex-shrink: 0; }
+.lb-pts-num { font-size: 16px; font-weight: 700; color: var(--accent); }
+.lb-pts-label { font-size: 10px; color: var(--muted); }
+.section-label { font-size: 11px; font-weight: 600; color: var(--muted); letter-spacing: 0.6px; text-transform: uppercase; margin: 14px 2px 8px; }
+.empty { text-align: center; padding: 48px 24px; color: var(--muted); font-size: 14px; line-height: 1.6; }
+.empty-icon { font-size: 36px; margin-bottom: 12px; }
+.loading { display: flex; align-items: center; justify-content: center; padding: 40px; color: var(--muted); font-size: 14px; gap: 10px; }
+.spinner { width: 18px; height: 18px; border: 2px solid var(--border); border-top-color: var(--accent); border-radius: 50%; animation: spin 0.7s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+.profile-header { background: var(--surface); border-radius: var(--radius); padding: 20px; margin-bottom: 10px; display: flex; align-items: center; gap: 16px; }
+.profile-avatar { width: 60px; height: 60px; border-radius: 50%; background: var(--accent-dim); display: flex; align-items: center; justify-content: center; font-size: 22px; font-weight: 700; color: var(--accent); flex-shrink: 0; overflow: hidden; }
+.profile-avatar img { width: 100%; height: 100%; object-fit: cover; }
+.profile-name { font-size: 17px; font-weight: 600; }
+.profile-email { font-size: 12px; color: var(--muted); margin-top: 3px; }
+.profile-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 10px; }
+.stat-card { background: var(--surface); border-radius: var(--radius); padding: 14px; text-align: center; }
+.stat-num { font-size: 22px; font-weight: 700; color: var(--accent); }
+.stat-label { font-size: 11px; color: var(--muted); margin-top: 3px; }
+.menu-item { background: var(--surface); border-radius: var(--radius); padding: 14px 16px; margin-bottom: 8px; display: flex; align-items: center; gap: 12px; cursor: pointer; transition: background 0.15s; }
+.menu-item:hover { background: var(--surface2); }
+.menu-item-label { font-size: 14px; font-weight: 500; flex: 1; }
+.menu-item.danger .menu-item-label { color: var(--red); }
+.no-tournament { background: var(--surface); border-radius: var(--radius); padding: 32px 20px; text-align: center; margin-top: 20px; }
+.no-tournament h3 { font-size: 16px; font-weight: 600; margin-bottom: 8px; }
+.no-tournament p { font-size: 13px; color: var(--muted); line-height: 1.6; }
+.toast { position: fixed; bottom: calc(var(--nav-height) + 12px); left: 50%; transform: translateX(-50%); background: var(--surface2); border: 1px solid var(--border); border-radius: 20px; padding: 10px 20px; font-size: 13px; font-weight: 500; white-space: nowrap; z-index: 200; opacity: 0; transition: opacity 0.2s; pointer-events: none; }
+.toast.visible { opacity: 1; }
+</style>
+</head>
+<body>
+
+<div class="screen active" id="screen-login">
+  <div class="login-logo">
+    <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
+      <path d="M20 4L36 13V27L20 36L4 27V13L20 4Z" stroke="#c7f230" stroke-width="2" stroke-linejoin="round"/>
+      <path d="M20 4V36M4 13L36 27M36 13L4 27" stroke="#c7f230" stroke-width="1.5" opacity="0.4"/>
+    </svg>
+  </div>
+  <div class="login-title">Prediktor</div>
+  <div class="login-sub">Predvidi. Natjecaj se. Pobijedi.<br>Turnirski prediktor za prave navijače.</div>
+  <button class="google-btn" onclick="signInWithGoogle()">
+    <svg width="20" height="20" viewBox="0 0 24 24">
+      <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
+      <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
+      <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/>
+      <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
+    </svg>
+    Nastavi s Googleom
+  </button>
+  <div class="login-terms">Prijavom prihvaćaš naše uvjete korištenja.</div>
+</div>
+
+<div class="screen" id="screen-app">
+  <div class="topbar">
+    <div class="topbar-inner">
+      <div class="topbar-title" id="topbar-title">Prediktor</div>
+      <div class="topbar-avatar" id="topbar-avatar" onclick="showNav('profile')">
+        <span id="avatar-initials">?</span>
+      </div>
+    </div>
+  </div>
+  <div class="content" id="main-content">
+    <div class="loading"><div class="spinner"></div> Učitavanje...</div>
+  </div>
+  <nav class="bottom-nav">
+    <div class="nav-item active" data-nav="home" onclick="showNav('home')">
+      <svg class="nav-icon" viewBox="0 0 22 22" fill="none"><path d="M3 9.5L11 3L19 9.5V19H14V14H8V19H3V9.5Z" stroke="#c7f230" stroke-width="1.5" stroke-linejoin="round"/></svg>
+      <span class="nav-label" style="color:var(--accent)">Turniri</span>
+    </div>
+    <div class="nav-item" data-nav="leaderboard" onclick="showNav('leaderboard')">
+      <svg class="nav-icon" viewBox="0 0 22 22" fill="none"><rect x="2" y="11" width="5" height="9" rx="1" stroke="#6b7280" stroke-width="1.5"/><rect x="8.5" y="7" width="5" height="13" rx="1" stroke="#6b7280" stroke-width="1.5"/><rect x="15" y="3" width="5" height="17" rx="1" stroke="#6b7280" stroke-width="1.5"/></svg>
+      <span class="nav-label">Ljestvica</span>
+    </div>
+    <div class="nav-item" data-nav="predictions" onclick="showNav('predictions')">
+      <svg class="nav-icon" viewBox="0 0 22 22" fill="none"><path d="M11 2L13.5 8.5H20.5L14.5 12.5L16.5 19L11 15L5.5 19L7.5 12.5L1.5 8.5H8.5L11 2Z" stroke="#6b7280" stroke-width="1.5" stroke-linejoin="round"/></svg>
+      <span class="nav-label">Predviđanja</span>
+    </div>
+    <div class="nav-item" data-nav="profile" onclick="showNav('profile')">
+      <svg class="nav-icon" viewBox="0 0 22 22" fill="none"><circle cx="11" cy="7" r="4" stroke="#6b7280" stroke-width="1.5"/><path d="M3 19c0-4 3.6-6 8-6s8 2 8 6" stroke="#6b7280" stroke-width="1.5" stroke-linecap="round"/></svg>
+      <span class="nav-label">Profil</span>
+    </div>
+  </nav>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+const SUPABASE_URL = 'https://bbibmedxvkzrbckqlqdd.supabase.co';
+const SUPABASE_KEY = 'sb_publishable_zvzgKTPdU98klL1nKjXHow_MtmI6hAv';
+const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+let currentUser = null, currentProfile = null, tournaments = [];
+
+async function signInWithGoogle() {
+  const { error } = await sb.auth.signInWithOAuth({
+    provider: 'google',
+    options: { redirectTo: window.location.href }
+  });
+  if (error) showToast('Greška pri prijavi.');
+}
+
+async function signOut() {
+  await sb.auth.signOut();
+  currentUser = null; currentProfile = null;
+  showScreen('login');
+}
+
+sb.auth.onAuthStateChange(async (event, session) => {
+  if (session?.user) {
+    currentUser = session.user;
+    await loadProfile();
+    showScreen('app');
+    loadHome();
+  } else {
+    showScreen('login');
+  }
+});
+
+async function loadProfile() {
+  const { data } = await sb.from('profiles').select('*').eq('id', currentUser.id).single();
+  currentProfile = data;
+  const el = document.getElementById('topbar-avatar');
+  const name = data?.display_name || currentUser.email || '?';
+  if (data?.avatar_url) {
+    el.innerHTML = `<img src="${data.avatar_url}" alt="">`;
+  } else {
+    el.innerHTML = `<span>${name.split(' ').map(w=>w[0]).join('').substring(0,2).toUpperCase()}</span>`;
+  }
+}
+
+function showScreen(name) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById('screen-' + name).classList.add('active');
+}
+
+function showNav(nav) {
+  document.querySelectorAll('.nav-item').forEach(el => {
+    const active = el.dataset.nav === nav;
+    el.classList.toggle('active', active);
+    el.querySelector('.nav-label').style.color = active ? 'var(--accent)' : '';
+    el.querySelectorAll('path,circle,rect').forEach(p => p.setAttribute('stroke', active ? '#c7f230' : '#6b7280'));
+  });
+  document.getElementById('topbar-title').textContent =
+    nav === 'home' ? 'Prediktor' : nav === 'leaderboard' ? 'Ljestvica' :
+    nav === 'predictions' ? 'Moja predviđanja' : 'Profil';
+  if (nav === 'home') loadHome();
+  else if (nav === 'leaderboard') loadLeaderboard();
+  else if (nav === 'predictions') loadPredictions();
+  else loadProfileScreen();
+}
+
+function tournamentCard(t) {
+  const isActive = t.status === 'active';
+  const statusText = isActive ? 'Uživo' : t.status === 'upcoming' ? 'Uskoro' : 'Završeno';
+  const accentColor = isActive ? 'var(--accent)' : 'var(--muted)';
+  const bgColor = isActive ? 'var(--accent-dim)' : 'var(--surface2)';
+  return `<div class="tournament-hero" onclick="openTournament('${t.id}')">
+    <div class="tournament-emblem">🏆</div>
+    <div style="flex:1;min-width:0">
+      <div class="tournament-name">${t.name}</div>
+      <div class="tournament-desc">${t.description||''}</div>
+      <div class="live-badge" style="background:${bgColor};color:${accentColor}">
+        ${isActive?'<div class="live-dot"></div>':''}${statusText}
+      </div>
+      ${t.deadline?`<div style="font-size:11px;color:var(--muted);margin-top:4px">Rok: ${new Date(t.deadline).toLocaleDateString('hr-HR',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'})}</div>`:''}
+    </div>
+    <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M6 4l4 4-4 4" stroke="#6b7280" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+  </div>`;
+}
+
+async function loadHome() {
+  const c = document.getElementById('main-content');
+  c.innerHTML = '<div class="loading"><div class="spinner"></div> Učitavanje...</div>';
+  const { data } = await sb.from('tournaments').select('*').order('created_at', { ascending: false });
+  tournaments = data || [];
+  if (!tournaments.length) {
+    c.innerHTML = `<div class="no-tournament"><div style="font-size:40px;margin-bottom:16px">🏆</div><h3>Nema aktivnih turnira</h3><p>Admin će uskoro dodati turnir.</p></div>`;
+    return;
+  }
+  const groups = [['active','Aktivni turniri'],['upcoming','Nadolazeći'],['finished','Završeni']];
+  c.innerHTML = groups.map(([status, label]) => {
+    const filtered = tournaments.filter(t => t.status === status);
+    return filtered.length ? `<div class="section-label">${label}</div>${filtered.map(tournamentCard).join('')}` : '';
+  }).join('');
+}
+
+async function loadLeaderboard() {
+  const c = document.getElementById('main-content');
+  c.innerHTML = '<div class="loading"><div class="spinner"></div> Učitavanje...</div>';
+  if (!tournaments.length) {
+    const { data } = await sb.from('tournaments').select('*').order('created_at',{ascending:false});
+    tournaments = data || [];
+  }
+  const active = tournaments.find(t => t.status === 'active') || tournaments[0];
+  if (!active) { c.innerHTML = '<div class="empty"><div class="empty-icon">📊</div>Nema turnira.</div>'; return; }
+  const { data: preds } = await sb.from('predictions').select('*, profiles(display_name, avatar_url)').eq('tournament_id', active.id);
+  if (!preds?.length) {
+    c.innerHTML = tournamentCard(active) + '<div class="empty"><div class="empty-icon">🏅</div>Još nema predviđanja.<br>Budi prvi!</div>';
+    return;
+  }
+  const rows = preds.map((p, i) => {
+    const name = p.profiles?.display_name || 'Igrač';
+    const avatar = p.profiles?.avatar_url ? `<img src="${p.profiles.avatar_url}" alt="">` : name.split(' ').map(w=>w[0]).join('').substring(0,2).toUpperCase();
+    const rankClass = ['r1','r2','r3'][i] || '';
+    const rankSymbol = ['🥇','🥈','🥉'][i] || (i+1);
+    return `<div class="lb-row">
+      <div class="lb-rank ${rankClass}">${rankSymbol}</div>
+      <div class="lb-avatar">${avatar}</div>
+      <div class="lb-info"><div class="lb-name">${name}</div><div class="lb-pick">${p.champion ? '🏆 '+p.champion : 'Nije predao'}</div></div>
+      <div class="lb-pts"><div class="lb-pts-num">—</div><div class="lb-pts-label">bod.</div></div>
+    </div>`;
+  }).join('');
+  c.innerHTML = tournamentCard(active) + `<div class="section-label">Poredak igrača</div><div class="card">${rows}</div>`;
+}
+
+async function loadPredictions() {
+  const c = document.getElementById('main-content');
+  if (!tournaments.length) {
+    const { data } = await sb.from('tournaments').select('*').order('created_at',{ascending:false});
+    tournaments = data || [];
+  }
+  const { data: myPreds } = await sb.from('predictions').select('*').eq('user_id', currentUser.id);
+  if (!tournaments.length) { c.innerHTML = '<div class="empty"><div class="empty-icon">⭐</div>Nema aktivnih turnira.</div>'; return; }
+  c.innerHTML = tournaments.map(t => {
+    const pred = myPreds?.find(p => p.tournament_id === t.id);
+    const submitted = !!pred?.champion;
+    return `<div class="card" style="margin-bottom:10px;cursor:pointer" onclick="openTournament('${t.id}')">
+      <div class="card-header">
+        <div><div class="card-title">${t.name}</div><div class="card-sub">${t.description||''}</div></div>
+        <div style="font-size:11px;padding:3px 10px;border-radius:20px;background:${submitted?'var(--accent-dim)':'var(--surface2)'};color:${submitted?'var(--accent)':'var(--muted)'}">
+          ${submitted ? '✓ Predano' : 'Nije predano'}
+        </div>
+      </div>
+      <div style="padding:12px 14px;font-size:13px;color:${submitted?'var(--text)':'var(--muted)'}">
+        ${submitted ? `🏆 Tvoj prvak: <strong>${pred.champion}</strong>` : 'Još nisi predao predviđanja.'}
+      </div>
+    </div>`;
+  }).join('');
+}
+
+async function loadProfileScreen() {
+  const c = document.getElementById('main-content');
+  const name = currentProfile?.display_name || currentUser?.email || 'Korisnik';
+  const avatar = currentProfile?.avatar_url ? `<img src="${currentProfile.avatar_url}" alt="">` : name.split(' ').map(w=>w[0]).join('').substring(0,2).toUpperCase();
+  const { data: myPreds } = await sb.from('predictions').select('id').eq('user_id', currentUser.id);
+  c.innerHTML = `
+    <div class="profile-header">
+      <div class="profile-avatar">${avatar}</div>
+      <div><div class="profile-name">${name}</div><div class="profile-email">${currentUser?.email||''}</div></div>
+    </div>
+    <div class="profile-stats">
+      <div class="stat-card"><div class="stat-num">${myPreds?.length||0}</div><div class="stat-label">Predviđanja</div></div>
+      <div class="stat-card"><div class="stat-num">—</div><div class="stat-label">Najbolji rezultat</div></div>
+    </div>
+    <div class="section-label">Postavke</div>
+    <div class="menu-item" onclick="showToast('Uskoro dostupno!')">
+      <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><circle cx="9" cy="9" r="7" stroke="#6b7280" stroke-width="1.5"/><path d="M9 6v3l2 2" stroke="#6b7280" stroke-width="1.5" stroke-linecap="round"/></svg>
+      <span class="menu-item-label">Povijest turnira</span><span style="color:var(--muted)">›</span>
+    </div>
+    <div class="menu-item danger" onclick="if(confirm('Odjava?')) signOut()">
+      <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M7 3H3v12h4M12 12l3-3-3-3M15 9H7" stroke="#ef4444" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <span class="menu-item-label">Odjava</span>
+    </div>`;
+}
+
+function openTournament(id) { showToast('Predviđanja uskoro!'); }
+
+let toastTimer;
+function showToast(msg) {
+  const el = document.getElementById('toast');
+  el.textContent = msg; el.classList.add('visible');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => el.classList.remove('visible'), 2500);
+}
+</script>
+</body>
+</html>
