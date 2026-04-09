@@ -171,17 +171,28 @@ async function signInWithGoogle() {
 
 async function signOut() {
   await sb.auth.signOut();
-  currentUser = null; currentProfile = null;
-  showScreen('login');
+  // onAuthStateChange SIGNED_OUT will handle the redirect
 }
 
+// Show loading state immediately — don't flash login screen
+document.getElementById('screen-login').style.display = 'none';
+document.getElementById('main-content').innerHTML = '<div class="loading" style="min-height:80vh"><div class="spinner"></div></div>';
+showScreen('app');
+
 sb.auth.onAuthStateChange(async (event, session) => {
+  if (event === 'SIGNED_OUT') {
+    currentUser = null; currentProfile = null;
+    document.getElementById('screen-login').style.display = '';
+    showScreen('login');
+    return;
+  }
   if (session?.user) {
     currentUser = session.user;
     await loadProfile();
     showScreen('app');
     loadHome();
-  } else {
+  } else if (event === 'INITIAL_SESSION') {
+    document.getElementById('screen-login').style.display = '';
     showScreen('login');
   }
 });
