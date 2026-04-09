@@ -98,7 +98,7 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, Bl
 </head>
 <body>
 
-<div class="screen active" id="screen-login">
+<div class="screen active" id="screen-login" style="">
   <div class="login-logo">
     <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
       <path d="M20 4L36 13V27L20 36L4 27V13L20 4Z" stroke="#c7f230" stroke-width="2" stroke-linejoin="round"></path>
@@ -128,9 +128,7 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, Bl
       </div>
     </div>
   </div>
-  <div class="content" id="main-content">
-    <div class="loading"><div class="spinner"></div> Učitavanje...</div>
-  </div>
+  <div class="content" id="main-content"><div class="loading" style="min-height:80vh"><div class="spinner"></div></div></div>
   <nav class="bottom-nav">
     <div class="nav-item active" data-nav="home" onclick="showNav('home')">
       <svg class="nav-icon" viewBox="0 0 22 22" fill="none"><path d="M3 9.5L11 3L19 9.5V19H14V14H8V19H3V9.5Z" stroke="#c7f230" stroke-width="1.5" stroke-linejoin="round"></path></svg>
@@ -153,27 +151,15 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, Bl
 
 <div class="toast" id="toast"></div>
 
-<script src="index_files/supabase-js@2"></script>
+<script src="index_files/supabase.js"></script>
 <script>
 const SUPABASE_URL = 'https://bbibmedxvkzrbckqlqdd.supabase.co';
 const SUPABASE_KEY = 'sb_publishable_zvzgKTPdU98klL1nKjXHow_MtmI6hAv';
 const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
 let currentUser = null, currentProfile = null, tournaments = [];
-let cache = { tournaments: null, ts: 0 };
-const CACHE_TTL = 30000; // 30 seconds
 
-async function fetchTournaments(force = false) {
-  const now = Date.now();
-  if (!force && cache.tournaments && (now - cache.ts) < CACHE_TTL) {
-    return cache.tournaments;
-  }
-  const { data } = await sb.from('tournaments').select('*, tournament_rounds(id)').order('created_at', { ascending: false });
-  cache.tournaments = data || [];
-  cache.ts = now;
-  tournaments = cache.tournaments;
-  return cache.tournaments;
-}
+
 let cache = { tournaments: null, predictions: {}, results: null, lastFetch: 0 };
 const CACHE_TTL = 30000; // 30 seconds
 
